@@ -1,5 +1,5 @@
 # 📘 Contact Book Web App
-A beautifully styled, animated Contact Book built with vanilla HTML, CSS, and JavaScript. It allows users to add, edit, and delete contacts with avatars — all backed by an API and enriched with slick transitions and modals.
+A beautifully styled, animated Contact Book built with vanilla HTML, CSS, and JavaScript. It allows users to add, edit, and delete contacts with avatars all backed by an API and enriched with slick transitions and modals.
 
 # 🚀 Features
 👤 Add/Edit/Delete contact functionality
