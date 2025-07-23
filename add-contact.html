@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Contact</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="pageFadeIn">
+  <div id="editContainer">
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 16px;">
+      <button id="homelink">Home</button>
+    </div>
+
+    <form id="editform" enctype="multipart/form-data">
+      <label for="firstname">First Name:</label>
+      <input type="text" id="firstname" name="firstname" required />
+
+      <label for="lastname">Last Name:</label>
+      <input type="text" id="lastname" name="lastname" required />
+
+      <label for="mobile">Mobile:</label>  
+      <input type="text" id="mobile" name="mobile" required />
+
+      <label for="email">Email:</label>  
+      <input type="email" id="email" name="email" required />
+
+      <label for="avatar">Select a file:</label>
+      <input type="file" name="avatar" id="avatar" />
+
+      <button type="submit" id="submitform">Submit</button>
+    </form>
+  </div>
+
+  <div id="modalNotification" class="modal hidden">
+    <div class="modal-content animatedModal">
+      <p id="modalMessage"></p>
+      <button id="modalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    document.getElementById("submitform").onclick = submitform;
+    document.getElementById("homelink").onclick = () => window.open("index.html", "_self");
+
+    function showModalMessage(message) {
+      document.getElementById("modalMessage").textContent = message;
+      document.getElementById("modalNotification").classList.remove("hidden");
+    }
+    document.getElementById("modalCloseBtn").onclick = () => {
+      document.getElementById("modalNotification").classList.add("hidden");
+    };
+
+    function submitform(e) {
+      e.preventDefault();
+      const form = new FormData(document.getElementById("editform"));
+      form.append("apiKey", apiKey);
+
+      fetch(rootPath + "controller/insert-contact/", {
+        method: 'POST',
+        body: form
+      })
+      .then(res => res.text())
+      .then(data => {
+        showModalMessage(data === "1" ? "Contact added successfully!" : data);
+        setTimeout(() => window.open("index.html", "_self"), 1500);
+      })
+      .catch(() => showModalMessage("Error adding contact."));
+    }
+  </script>
+</body>
+</html>

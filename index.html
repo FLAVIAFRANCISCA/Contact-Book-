@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Book</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body onload="fetchContacts()" class="pageFadeIn">
+  <div id="bookContainer">
+    <div id="header">
+      <h2>My Contacts</h2>
+      <div>
+        <button id="refresh" type="button">Refresh</button>
+        <button id="addContact" type="button">Add Contact</button>
+      </div>
+    </div>
+
+    <div id="contactBox">
+      <div id="cardGrid"></div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modalNotification" class="modal hidden">
+    <div class="modal-content animatedModal">
+      <p id="modalMessage"></p>
+      <button id="modalCloseBtn">Close</button>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script>
+    document.getElementById("refresh").addEventListener("click", fetchContacts);
+    document.getElementById("addContact").addEventListener("click", () => window.open("add-contact.html", "_self"));
+
+    function showModalMessage(message) {
+      const modal = document.getElementById("modalNotification");
+      document.getElementById("modalMessage").textContent = message;
+      modal.classList.remove("hidden");
+    }
+
+    document.getElementById("modalCloseBtn").addEventListener("click", () => {
+      document.getElementById("modalNotification").classList.add("hidden");
+    });
+
+    function fetchContacts() {
+      fetch(rootPath + "controller/get-contacts/")
+        .then(res => res.json())
+        .then(displayOutput)
+        .catch(err => {
+          console.error("Error fetching contacts:", err);
+          showModalMessage("Failed to fetch contacts.");
+        });
+    }
+
+    function displayOutput(data) {
+      const grid = document.getElementById("cardGrid");
+      grid.innerHTML = data.map(c => `
+        <div class="contactCard animatedCard" onclick="editContact(${c.id})">
+          <div class="avatarCircle">
+            <img src="${rootPath}controller/uploads/${c.avatar}" alt="Avatar" />
+          </div>
+          <div class="contactInfo">
+            <h4>${c.firstname} ${c.lastname}</h4>
+            <p>${c.mobile}</p>
+            <p>${c.email}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function editContact(id) {
+      window.open("edit-contact.html?id=" + id, "_self");
+    }
+  </script>
+</body>
+</html>
